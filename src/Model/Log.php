@@ -43,7 +43,7 @@ class Log extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('ShipperHQ\Logger\Model\ResourceModel\Log');
+        $this->_init(\ShipperHQ\Logger\Model\ResourceModel\Log::class);
     }
 
     /**
@@ -71,8 +71,13 @@ class Log extends AbstractModel
     /**
      * Parse and save new data
      *
-     * @param array $data
-     * @return \ShipperHQ\Logger\Model\Log
+     * @param int $severity
+     * @param string $extension
+     * @param string $title
+     * @param mixed $description
+     * @param int $code
+     * @param string $url
+     * @return mixed
      */
     public function parse($severity, $extension, $title, $description, $code = 0, $url = '')
     {
@@ -93,6 +98,11 @@ class Log extends AbstractModel
         return $this->logResource->parse($this, $feedData);
     }
 
+    /**
+     * Remove all log records.
+     *
+     * @return mixed
+     */
     public function truncate()
     {
         return $this->logResource->truncate();

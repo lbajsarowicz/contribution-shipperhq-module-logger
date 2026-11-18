@@ -28,11 +28,15 @@ class View extends \Magento\Backend\Block\Widget\Form\Generic
      */
     protected $_headerText;
 
+    /**
+     * @var string
+     */
     protected $_template = 'view.phtml';
 
     /**
      * @param \Magento\Backend\Block\Widget\Context $context
      * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
      * @param array $data
      */
     public function __construct(
@@ -71,12 +75,22 @@ class View extends \Magento\Backend\Block\Widget\Form\Generic
         return __('ShipperHQ Log');
     }
 
+    /**
+     * Retrieve the log record.
+     *
+     * @return mixed
+     */
     public function getMessageData()
     {
         $log = $this->getData('log');
         return $log;
     }
 
+    /**
+     * Retrieve the log listing URL.
+     *
+     * @return string
+     */
     public function getBackUrl()
     {
         return $this->getUrl('shqlogger/*/index');
