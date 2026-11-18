@@ -81,25 +81,25 @@ class PostLogObserver implements ObserverInterface
 
         if ($systemLogLevel>0 && $systemLogLevel>=$severity) {
             switch ($severity) {
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_NOTICE:
+                case Logger::SEVERITY_NOTICE:
                     $this->logger->debug(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->debug(var_export($description, true));
                     }
                     break;
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_MINOR:
+                case Logger::SEVERITY_MINOR:
                     $this->logger->info(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->info(var_export($description, true));
                     }
                     break;
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_MAJOR:
+                case Logger::SEVERITY_MAJOR:
                     $this->logger->warning(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->warning(var_export($description, true));
                     }
                     break;
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_CRITICAL:
+                case Logger::SEVERITY_CRITICAL:
                     $this->logger->critical(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->critical(var_export($description, true));

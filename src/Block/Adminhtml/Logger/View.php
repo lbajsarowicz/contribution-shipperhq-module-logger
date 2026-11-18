@@ -11,8 +11,23 @@
 
 namespace ShipperHQ\Logger\Block\Adminhtml\Logger;
 
-class View extends \Magento\Backend\Block\Widget\Form\Generic//\Magento\Backend\Block\Widget\Form\Container
+class View extends \Magento\Backend\Block\Widget\Form\Generic
 {
+    /**
+     * @var string
+     */
+    protected $_controller;
+
+    /**
+     * @var string
+     */
+    protected $_blockGroup;
+
+    /**
+     * @var \Magento\Framework\Phrase
+     */
+    protected $_headerText;
+
     protected $_template = 'view.phtml';
 
     /**

@@ -18,7 +18,7 @@ use \Magento\Framework\App\Config\ScopeConfigInterface;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Logger extends \Monolog\Logger
+class Logger extends \Magento\Framework\Logger\Monolog
 {
     const SEVERITY_CRITICAL = 1;
     const SEVERITY_MAJOR    = 2;
