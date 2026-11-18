@@ -29,8 +29,8 @@ class PostLogObserver implements ObserverInterface
 
     /**
      *
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \ShipperHQ\Logger\Model\Logger $logger
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         \ShipperHQ\Logger\Model\Logger $logger,
@@ -75,77 +75,33 @@ class PostLogObserver implements ObserverInterface
         $extension      = $observer->getEvent()->getExtension();
         $description    = $observer->getEvent()->getDescription();
 
-        if ($adminLevel>0 && $adminLevel>=$severity) {
-        //    Mage::getModel('wsalogger/log')->parse($severity,$extension,$title,$description,$code,$url);
-        }
-
         if ($systemLogLevel>0 && $systemLogLevel>=$severity) {
             switch ($severity) {
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_NOTICE:
+                case Logger::SEVERITY_NOTICE:
                     $this->logger->debug(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->debug(var_export($description, true));
                     }
                     break;
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_MINOR:
+                case Logger::SEVERITY_MINOR:
                     $this->logger->info(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->info(var_export($description, true));
                     }
                     break;
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_MAJOR:
+                case Logger::SEVERITY_MAJOR:
                     $this->logger->warning(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->warning(var_export($description, true));
                     }
                     break;
-                case \ShipperHQ\Logger\Helper\Log::SEVERITY_CRITICAL:
+                case Logger::SEVERITY_CRITICAL:
                     $this->logger->critical(var_export($code.' '.$url.' - '.$extension.' - '.$title, true));
                     if ($description !== null && $description != '') {
                         $this->logger->critical(var_export($description, true));
                     }
                     break;
             }
-        }
-
-        if ($emailLevel>0 && $emailLevel>=$severity) {
-            /*  * Loads the html file named 'custom_email_template1.html' from
-             * app/locale/en_US/template/email/activecodeline_custom_email1.html  */
-//            $emailTemplate  = Mage::getModel('core/email_template')
-//                ->loadDefault('log_email_template');
-//
-//            $senderName = Mage::getStoreConfig('wsalogmenu/wsalog/sender_email_name');
-//            $senderEmail = Mage::getStoreConfig('wsalogmenu/wsalog/sender_email');
-//            $subject = Mage::getStoreConfig('wsalogmenu/wsalog/email_subject');
-//
-//            if(!empty($senderEmail) && !empty($senderName) && !empty($subject)) {
-//
-//                $emailTemplate->setSenderName($senderName);
-//                $emailTemplate->setSenderEmail($senderEmail);
-//                $emailTemplate->setTemplateSubject($subject);
-//
-//                if (is_array($description) || is_object($description)) {
-//                    $description = print_r($description, true);
-//                }
-//                $description = htmlentities($description);
-//
-//                //Create an array of variables to assign to template
-//                //TODO add severity
-//                $emailTemplateVariables 				= array();
-//                $emailTemplateVariables['title'] 		= $title;
-//                $emailTemplateVariables['severity'] 	= $severity;
-//                $emailTemplateVariables['extension'] 	= $extension;
-//                $emailTemplateVariables['description'] 	= $description;
-//                $emailTemplateVariables['code'] 		= $code;
-//                $emailTemplateVariables['url']		 	= $url;
-//
-//                $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
-//                /*  * Or you can send the email directly,  * note getProcessedTemplate is called inside send()  */
-//
-//                $emailTemplate->send(Mage::getStoreConfig('wsalogmenu/wsalog/contact_email'),'', $emailTemplateVariables);
-//            } else {
-//                Mage::log("ShipperHQ Logger - Email Log Can Not Be Sent. Email Address/Subject/Name Not Entered in Config");
-//            }
         }
     }
 }

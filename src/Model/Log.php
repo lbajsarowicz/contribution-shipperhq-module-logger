@@ -16,11 +16,34 @@ use Magento\Framework\Model\AbstractModel;
 class Log extends AbstractModel
 {
     /**
+     * @var \ShipperHQ\Logger\Model\ResourceModel\Log
+     */
+    private $logResource;
+
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \ShipperHQ\Logger\Model\ResourceModel\Log $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     */
+    public function __construct(
+        \Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        \ShipperHQ\Logger\Model\ResourceModel\Log $resource,
+        ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        $this->logResource = $resource;
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+    }
+
+    /**
      * Define resource model
      */
     protected function _construct()
     {
-        $this->_init('ShipperHQ\Logger\Model\ResourceModel\Log');
+        $this->_init(\ShipperHQ\Logger\Model\ResourceModel\Log::class);
     }
 
     /**
@@ -31,7 +54,7 @@ class Log extends AbstractModel
     public function loadLatestNotice()
     {
         $this->setData([]);
-        $this->getResource()->loadLatestNotice($this);
+        $this->logResource->loadLatestNotice($this);
         return $this;
     }
 
@@ -42,14 +65,19 @@ class Log extends AbstractModel
      */
     public function getNoticeStatus()
     {
-        return $this->getResource()->getNoticeStatus($this);
+        return $this->logResource->getNoticeStatus($this);
     }
 
     /**
      * Parse and save new data
      *
-     * @param array $data
-     * @return \ShipperHQ\Logger\Model\Log
+     * @param int $severity
+     * @param string $extension
+     * @param string $title
+     * @param mixed $description
+     * @param int $code
+     * @param string $url
+     * @return mixed
      */
     public function parse($severity, $extension, $title, $description, $code = 0, $url = '')
     {
@@ -67,11 +95,16 @@ class Log extends AbstractModel
             'url'           => $url
         ];
 
-        return $this->getResource()->parse($this, $feedData);
+        return $this->logResource->parse($this, $feedData);
     }
 
+    /**
+     * Remove all log records.
+     *
+     * @return mixed
+     */
     public function truncate()
     {
-        return $this->getResource()->truncate();
+        return $this->logResource->truncate();
     }
 }

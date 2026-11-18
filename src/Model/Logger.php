@@ -18,29 +18,29 @@ use \Magento\Framework\App\Config\ScopeConfigInterface;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Logger extends \Monolog\Logger
+class Logger extends \Magento\Framework\Logger\Monolog
 {
-    const SEVERITY_CRITICAL = 1;
-    const SEVERITY_MAJOR    = 2;
-    const SEVERITY_MINOR    = 3;
-    const SEVERITY_NOTICE   = 4;
-    const SEVERITY_NONE     = -1;
+    public const SEVERITY_CRITICAL = 1;
+    public const SEVERITY_MAJOR    = 2;
+    public const SEVERITY_MINOR    = 3;
+    public const SEVERITY_NOTICE   = 4;
+    public const SEVERITY_NONE     = -1;
 
     /**
      * @var  \Magento\Framework\App\Config\ScopeConfigInterface
      */
     private $scopeConfig;
     /**
-     * @var \ShipperHQ\Shipper\Model\SynchronizeFactory
+     * @var LogFactory
      */
     private $logFactory;
 
     /**
-     * @param LogFactory         $logFactory
+     * @param LogFactory $logFactory
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param string             $name       The logging channel
-     * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
-     * @param callable[]         $processors Optional array of processors
+     * @param string $name The logging channel
+     * @param \Monolog\Handler\HandlerInterface[] $handlers Optional stack of handlers
+     * @param callable[] $processors Optional array of processors
      */
     public function __construct(
         LogFactory $logFactory,
@@ -62,7 +62,7 @@ class Logger extends \Monolog\Logger
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return void
      */
     public function debug($message, array $context = []): void
     {
@@ -80,7 +80,7 @@ class Logger extends \Monolog\Logger
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return void
      */
     public function info($message, array $context = []): void
     {
@@ -98,7 +98,7 @@ class Logger extends \Monolog\Logger
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return void
      */
     public function warning($message, array $context = []): void
     {
@@ -116,7 +116,7 @@ class Logger extends \Monolog\Logger
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return void
      */
     public function critical($message, array $context = []): void
     {
@@ -126,7 +126,14 @@ class Logger extends \Monolog\Logger
         $this->logMessage($message, $context, self::SEVERITY_CRITICAL);
     }
 
-
+    /**
+     * Dispatch a message to the configured logging destinations.
+     *
+     * @param mixed $message
+     * @param array $context
+     * @param int $severity
+     * @return void
+     */
     protected function logMessage($message, array $context, $severity)
     {
         $adminLevel = $this->scopeConfig->getValue('shqlogmenu/shqlogger/admin_level');
@@ -160,6 +167,14 @@ class Logger extends \Monolog\Logger
         }
     }
 
+    /**
+     * Store a structured message in the admin log.
+     *
+     * @param mixed $message
+     * @param array $context
+     * @param int $severity
+     * @return void
+     */
     protected function logAdmin($message, array $context, $severity)
     {
         if (!is_array($message)) {
@@ -171,15 +186,25 @@ class Logger extends \Monolog\Logger
         }
     }
 
+    /**
+     * Reserve the email logging destination.
+     *
+     * @param mixed $message
+     * @param array $context
+     * @param int $severity
+     * @return void
+     */
     protected function logEmail($message, array $context, $severity)
     {
         //To Do
     }
 
     /**
-     * @deprecated 20.4.0 Logging is either enabled or disabled for all
+     * Check the legacy per-module debug setting.
      *
-     * @param $moduleName
+     * @deprecated 20.4.0 Logging is now enabled or disabled globally.
+     * @see debug()
+     * @param string $moduleName
      *
      * @return bool
      */
